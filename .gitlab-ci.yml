@@ -254,15 +254,16 @@ create release:
 ### SECURITY ###
 
 include:
-  - template: Security/Secret-Detection.gitlab-ci.yml
-  - template: Security/Dependency-Scanning.gitlab-ci.yml
-#  - template: Security/SAST.gitlab-ci.yml
+  - template: Jobs/Secret-Detection.gitlab-ci.yml
+#  - template: Jobs/Dependency-Scanning.gitlab-ci.yml
+#  - template: Jobs/SAST.gitlab-ci.yml
 
 secret_detection:
   needs: []
   rules: *on_run
 
-generate shipped dependencies:
+pre-gemnasium-python-dependency-scanning:
+  stage: test
   needs: []
   before_script:
     - pip install poetry
@@ -273,19 +274,7 @@ generate shipped dependencies:
   artifacts:
     paths:
       - poetry.lock
-  rules: *on_merge_request
-
-gemnasium-python-dependency_scanning:
-  needs:
-    - job: generate shipped dependencies
-      artifacts: true
-  # Both `needs` and `dependencies` are used due to a quirk of gitlab.
-  # `gemnasium-python-dependency_scanning` specifies an empty list of
-  # dependencies, which means that unless you explicitly add the dependency,
-  # all artifacts will be filtered out and removed from this job.
-  dependencies:
-    - generate shipped dependencies
-  rules: *on_merge_request
+  rules: *on_run
 
 # semgrep-sast:
 #   needs: []
