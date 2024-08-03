@@ -5,10 +5,12 @@ from os import chdir, getcwd
 @contextmanager
 def cwd(path):
     old_path = getcwd()
+    print(f"{old_path} -> {path}")
     chdir(path)
     try:
         yield
     finally:
+        print(f"{old_path} <- {path}")
         chdir(old_path)
 
 
