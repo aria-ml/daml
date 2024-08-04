@@ -1,11 +1,12 @@
 from contextlib import contextmanager
-from os import chdir, getcwd
+from os import chdir, getcwd, listdir
 
 
 @contextmanager
 def cwd(path):
     old_path = getcwd()
     print(f"{old_path} -> {path}")
+    listdir(old_path)
     chdir(path)
     try:
         yield
